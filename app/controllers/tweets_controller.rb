@@ -2,8 +2,12 @@ class TweetsController<ApplicationController
 
   before_action :authenticate_user!, except:[:index,:show]
   skip_before_action :verify_authenticity_token
+  include NotificationHelper
 
   def index
+
+    #binding.pry
+
     @tweets = Tweet.all.order("created_at DESC")
     @user_gid=current_user.to_gid_param if current_user
     if current_user.nil?
@@ -11,6 +15,8 @@ class TweetsController<ApplicationController
     else
       @tweet = current_user.tweets.new
     end
+
+
 
   end
 
@@ -73,7 +79,7 @@ class TweetsController<ApplicationController
         format.html{redirect_back fallback_location:@tweet,alert:"Something went wrong while retweeting"}
       end
     end
-
+    notify(notification)
   end
 
   def likeables
