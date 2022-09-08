@@ -9,7 +9,7 @@
 
 
     <%= render "form", tweet: @tweet %>
-    <%=turbo_stream_from "tweets"%>
+    <%=turbo_stream_from "public_likes"%>
     <%=turbo_frame_tag "tweets" do%>
       <%@tweets.all.each do |tweet|%>
         <%=render "tweets/#{tweet.tweet_type.parameterize}", tweet:tweet, like_status: current_user.liked?(tweet) %>

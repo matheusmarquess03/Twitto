@@ -12,5 +12,7 @@ Rails.application.routes.draw do
 
   post 'like/:id',to: "tweets#like",as: "like_tweet"
 
-  resources :profiles
+  resources :profiles do
+    resources :friendships,only: [:create,:destroy]
+  end
 end
