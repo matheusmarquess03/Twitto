@@ -23,7 +23,7 @@
 
   <div class="sidebarOption">
     <% if current_user.notifications.unread.count>0 %>
-      <i class="fa-solid fa-bell" style="color:red"><%=Current.user.notifications.unread.count%></i>
+      <i class="fa-solid fa-bell" style="color:red"><%=current_user.notifications.unread.count%></i>
       <%=link_to "Notification", notifications_path,class:"sidebarOption_notification",style:"color:black"%>
     <%else%>
       <i class="fa-solid fa-bell"></i>

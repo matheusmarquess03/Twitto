@@ -9,6 +9,8 @@ Rails.application.routes.draw do
     resources :comments
     member do
       post :retweet
+      get :retweet
+      get :likeables
     end
   end
 

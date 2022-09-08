@@ -42,12 +42,12 @@ class User < ApplicationRecord
     if liked_tweets.include?(tweet)
       liked_tweets.destroy(tweet)
       #create unlike notification
-      notification=Notification.create(recipient:tweet.user,actor:Current.user,action:"unlike",notifiable:tweet)
+      notification=Notification.create(recipient:tweet.user,actor:current_user,action:"unlike",notifiable:tweet)
       NotificationRelayJob.perform_later(notification)
     else
       liked_tweets<<tweet
       #create like notification
-      notification=Notification.create(recipient:tweet.user,actor:Current.user,action:"like",notifiable:tweet)
+      notification=Notification.create(recipient:tweet.user,actor:current_user,action:"like",notifiable:tweet)
       NotificationRelayJob.perform_later(notification)
     end
     public_target="tweet_#{tweet.id}_public_likes"

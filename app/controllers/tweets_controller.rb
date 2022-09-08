@@ -71,9 +71,10 @@ class TweetsController<ApplicationController
         format.html{redirect_back fallback_location:@tweet,alert:"Something went wrong while retweeting"}
       end
     end
-
   end
 
+  def likeables
+  end
 
   private
 
