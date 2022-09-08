@@ -1,3 +1,4 @@
+<style></style>
 <div class="profile">
   <%=render "shared/sidebar"%>
   <div class="profile_body">
@@ -15,7 +16,7 @@
         <h3 class="follow_unfollow_button">
           <%=@profile.name  %>
           <% if !(@profile.id == current_user.id)%>
-            <%if Current.user.following?(@profile)%>
+            <%if current_user.following?(@profile)%>
               <%=button_to "Unfollow",profile_friendship_path(@profile),method: :delete,class:"btn btn-danger ms-3"%></button>
             <%elsif%>
               <%=button_to "Follow",profile_friendships_path(@profile),class:"btn btn-primary ms-3"%></button>
@@ -24,9 +25,7 @@
             <%=link_to "" , edit_user_registration_path,class:"fa-solid fa-gear ms-4"%>
           <%end%>
         </h3>
-        <p class="mt-3">Followers- <%=@profile.followers.count%>   Following- <%=@profile.following.count%> </p>
-
-
+        <p class="mt-3"><%= link_to "Followers",friendlist_profile_path(@profile)%> - <%=@profile.followers.count%>  <%= link_to "Followings",friendlist_profile_path(@profile)%>- <%=@profile.following.count%> </p>
       </div>
     </div>
 
@@ -34,8 +33,6 @@
       <%@profile.tweets.all.each do |tweet|%>
         <%=render "tweets/tweet", tweet:tweet%>
       <%end%>
-    </div>
-    <div>
     </div>
   </div>
 </div>
