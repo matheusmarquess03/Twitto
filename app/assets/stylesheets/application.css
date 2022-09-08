@@ -18,7 +18,6 @@
     padding: 0;
     margin: 0;
 }
-
 body{
     --twitter-color:#50b7f5;
     --twitter-background:#e6ecf0;
@@ -40,4 +39,13 @@ a{
 
 img{
     border-radius: 100%;
+}
+
+#user_notification_bell{
+    display: flex;
+    align-items: center;
+}
+#follow_unfollow_list{
+    display: flex;
+    align-items: center;
 }

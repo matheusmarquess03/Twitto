@@ -7,6 +7,12 @@ class Tweet < ApplicationRecord
 
   validates :body, presence: true, unless: :tweet_id
 
+  after_create_commit {broadcast_replace_later_to "notification_bell",
+                                                  target:"#{current_user.id}_notification_bell_icon",
+                                                  partial:"shared/bellnotification",
+                                                  locals: {current_user: current_user}
+  }
+
   def tweet_type
     if tweet_id?
       "retweet"

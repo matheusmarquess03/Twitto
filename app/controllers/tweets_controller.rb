@@ -1,5 +1,7 @@
 class TweetsController<ApplicationController
+
   before_action :authenticate_user!, except:[:index,:show]
+  skip_before_action :verify_authenticity_token
 
   def index
     @tweets = Tweet.all.order("created_at DESC")
@@ -60,9 +62,9 @@ class TweetsController<ApplicationController
   def retweet
     @tweet= Tweet.find(params[:id])
 
-    @retweet = current_user.tweets.new(tweet_id:@tweet.id,user_id: current_user.id)
+    @retweet=current_user.tweets.new(tweet_id:@tweet.id,user_id:current_user.id)
     #create notification for user
-    notification = Notification.create(recipient:@tweet.user, actor:current_user,action:"retweet",notifiable:@retweet)
+    notification= Notification.create(recipient:@tweet.user,actor:current_user,action:"retweet",notifiable:@retweet)
     NotificationRelayJob.perform_later(notification)
     respond_to do |format|
       if @retweet.save
@@ -71,6 +73,7 @@ class TweetsController<ApplicationController
         format.html{redirect_back fallback_location:@tweet,alert:"Something went wrong while retweeting"}
       end
     end
+
   end
 
   def likeables
@@ -83,13 +86,4 @@ class TweetsController<ApplicationController
     params.require(:tweet).permit(:body,:tweet_id)
   end
 
-  def private_stream
-    private_target="#{helpers.dom_id(@tweet)}_private_likes"
-    turbo_stream.replace(private_target,
-                         partial:"likes/like_button",
-                         locals:{tweet:@tweet,
-                                 like_status:current_user.liked?(@tweet)
-                         }
-    )
-  end
 end

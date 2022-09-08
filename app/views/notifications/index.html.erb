@@ -1,5 +1,5 @@
 <div class="notifications">
-  <%=render "shared/sidebar"%>
+  <%=render "shared/sidebar", current_user: current_user %>
   <div class="notification_message">
     <%if @notifications.count>0 %>
       <%=render "notification",notifications:@notifications%>
