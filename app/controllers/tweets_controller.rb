@@ -50,9 +50,7 @@ class TweetsController<ApplicationController
     @tweet= Tweet.find(params[:id])
     current_user.like(@tweet)
     redirect_to do |format|
-      format.turbo_stream do
-        render turbo_stream: private_stream
-      end
+      format.turbo_stream
     end
   end
 
