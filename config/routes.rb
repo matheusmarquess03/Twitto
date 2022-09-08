@@ -5,6 +5,12 @@ Rails.application.routes.draw do
 
   resources :tweets, :except =>[:edit] do
     resources :comments
+    member do
+      post :retweet
+    end
   end
+
+  post 'like/:id',to: "tweets#like",as: "like_tweet"
+
   resources :profiles
 end
