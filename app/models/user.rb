@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   has_many :tweets
-  has_many :comments
+  has_many :comments, through: :tweet
   has_one_attached :profile_image
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable

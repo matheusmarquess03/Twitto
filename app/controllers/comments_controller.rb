@@ -1,11 +1,15 @@
-class CommentsController < ApplicationController
+class CommentsController<ApplicationController
   before_action :authenticate_user!
 
   def create
     #post = Post.joins(:comments).first
     @tweet = Tweet.find(params[:tweet_id])
     @comment = @tweet.comments.create(comment_params.merge(user:current_user))
-    # @comment.update(user_id:current_user.id)
+    # respond_to do |format|
+    #     if @comment.save
+    #         format.turbo_stream
+    #     end
+    # end
     redirect_to tweet_path(@tweet)
   end
 
@@ -17,7 +21,6 @@ class CommentsController < ApplicationController
   end
 
   private
-
   def comment_params
     params.require(:comment).permit(:body)
   end

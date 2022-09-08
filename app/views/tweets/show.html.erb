@@ -2,11 +2,7 @@
   <%=render "shared/sidebar"%>
   <div class="post single_post">
     <div class="post_avatar">
-      <% if !@tweet.user.profile_image.byte_size.nil? %>
-        <%= image_tag @tweet.user.profile_image,class:"post_image mt-3"%>
-      <%else%>
-        <%=gravatar_image_tag(@tweet.user.email, size:64,alt:current_user.name,class:"post_image mt-3")%>
-      <%end%>
+      <i class="fa-solid fa-user"></i>
     </div>
     <div class="post_body">
 
@@ -25,16 +21,8 @@
         <i class="fa-solid fa-heart"></i>
         <i class="fa-solid fa-comment"></i>
         <i class="fa-solid fa-retweet"></i>
-        <div class="deleteOption">
-          <% if @tweet.user.id == current_user.id %>
-
-            <%= link_to " ", tweet_path(@tweet), data: {
-              turbo_method: :delete,
-              turbo_confirm: "Are you sure?"
-            },class:"fa-solid fa-trash" %>
-          <% end %>
-        </div>
       </div>
+
       <div class="comments_form">
         <%= render 'comments/form' %>
       </div>
@@ -45,5 +33,5 @@
       </div>
     </div>
   </div>
-</div>
+
 

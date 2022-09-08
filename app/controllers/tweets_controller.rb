@@ -1,4 +1,5 @@
-class TweetsController < ApplicationController
+class TweetsController<ApplicationController
+
   before_action :authenticate_user!, except:[:index,:show]
 
   def index
@@ -27,11 +28,14 @@ class TweetsController < ApplicationController
   def create
     @tweet =current_user.tweets.new(tweet_params)
 
-    if @tweet.save
-      redirect_to root_path,notice: "Post created"
-    else
-      flash[:error]="Wrong inputs!! Something is missing"
-      render :new
+    respond_to do |format|
+      if @tweet.save
+        format.turbo_stream
+        #   redirect_to root_path,notice: "Post created"
+      else
+        flash[:error]="Wrong inputs!! Something is missing"
+        render :new
+      end
     end
   end
 
@@ -39,7 +43,7 @@ class TweetsController < ApplicationController
     @tweet = current_user.tweets.find(params[:id])
     @tweet.destroy
 
-    redirect_to root_path, status: 303
+    redirect_to profile_path, status: 303
   end
 
 
@@ -48,4 +52,5 @@ class TweetsController < ApplicationController
   def tweet_params
     params.require(:tweet).permit(:body)
   end
+
 end
