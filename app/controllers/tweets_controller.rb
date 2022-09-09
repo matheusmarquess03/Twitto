@@ -5,9 +5,6 @@ class TweetsController<ApplicationController
   include NotificationHelper
 
   def index
-
-    #binding.pry
-
     @tweets = Tweet.all.order("created_at DESC")
     @user_gid=current_user.to_gid_param if current_user
     if current_user.nil?
@@ -15,9 +12,6 @@ class TweetsController<ApplicationController
     else
       @tweet = current_user.tweets.new
     end
-
-
-
   end
 
   def show

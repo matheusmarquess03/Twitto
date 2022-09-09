@@ -30,6 +30,17 @@ class CommentsController<ApplicationController
     redirect_to tweet_path(@tweet), status: 303
   end
 
+  def like_comment
+    @tweet = Tweet.find(params[:tweet_id])
+    @comment = @tweet.comments.find(params[:id])
+    current_user.like_comment(@comment)
+
+    respond_to do |format|
+      format.turbo_stream
+    end
+
+    #redirect_to tweet_path(@tweet)
+  end
   private
 
   def comment_params
