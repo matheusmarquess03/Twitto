@@ -7,8 +7,9 @@ class User < ApplicationRecord
 
   has_many :tweets, dependent: :destroy
   has_many :comments, dependent: :destroy
-  has_many :likeables, dependent: :destroy
-  has_many :liked_tweets, through: :likeables, source: :tweet
+  has_many :likes, dependent: :destroy
+  has_many :liked_tweets,through: :likes,source_type: "Tweet",source: :likeable
+  has_many :liked_comments,through: :likes,source_type: "Comment",source: :likeable
   has_many :active_friendships,class_name:"Friendship",foreign_key:"follower_id",dependent: :destroy
   has_many :following, through: :active_friendships,source: :followed
   has_many :passive_friendships,class_name:"Friendship",foreign_key:"followed_id",dependent: :destroy
@@ -43,6 +44,10 @@ class User < ApplicationRecord
     liked_tweets.include?(tweet)
   end
 
+  def liked_comment?(comment)
+    liked_comments.include?(comment)
+  end
+
   def like(tweet)
     if liked_tweets.include?(tweet)
       liked_tweets.destroy(tweet)
@@ -63,6 +68,14 @@ class User < ApplicationRecord
                                target:public_target,
                                partial:"likes/like_count",
                                locals:{tweet:tweet}
+  end
+
+  def like_comment(comment)
+    if liked_comments.include?(comment)
+      liked_comments.destroy(comment)
+    else
+      liked_comments<<comment
+    end
   end
 
 end
