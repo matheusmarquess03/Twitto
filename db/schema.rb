@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_09_223442) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_09_225431) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -50,12 +50,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_09_223442) do
   end
 
   create_table "likes", force: :cascade do |t|
-    t.string "likeable_type", null: false
-    t.integer "likeable_id", null: false
     t.integer "user_id", null: false
+    t.integer "tweet_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["likeable_type", "likeable_id"], name: "index_likes_on_likeable"
+    t.index ["tweet_id"], name: "index_likes_on_tweet_id"
     t.index ["user_id"], name: "index_likes_on_user_id"
   end
 
@@ -102,6 +101,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_09_223442) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "likes", "tweets"
   add_foreign_key "likes", "users"
   add_foreign_key "tweets", "users"
 end
