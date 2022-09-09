@@ -5,7 +5,7 @@
       <%if !tweet.tweet.user.profile_image.byte_size.nil?%>
         <%= image_tag tweet.tweet.user.profile_image,class:"post_image"%>
       <%else%>
-        <%=gravatar_image_tag(tweet.tweet.user.email, size:64,alt: current_user.name,class:"post_image")%>
+        <%=gravatar_image_tag(tweet.tweet.user.email, size:64,alt:Current.user.name,class:"post_image")%>
       <%end%>
     </div>
     <div class="post_body">
@@ -18,6 +18,9 @@
         <div class=post_headerDescription>
           <p> <%=tweet.tweet.body%></p>
         </div>
+        <%if !tweet.tweet.tweet_image.byte_size.nil?%>
+          <%= image_tag tweet.tweet.tweet_image,style:"border-radius:0"%>
+        <%end%>
       </div>
       <div class="post_footer">
         <div class="likeOption">
