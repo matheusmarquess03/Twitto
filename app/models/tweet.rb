@@ -4,7 +4,9 @@ class Tweet < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :likes, as: :likeable
   has_one_attached :tweet_image
+  after_destroy_commit{broadcast_remove_to "public_tweets"}
   validates :body, presence: true, unless: :tweet_id
+
 
 
   def tweet_type
