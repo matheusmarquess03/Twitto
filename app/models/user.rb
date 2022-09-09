@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   include NotificationHelper
+  include LikeBroadcastHelper
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   has_many :tweets, dependent: :destroy
@@ -22,26 +23,14 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
 
-  #refactor follow
+
   #follow/unfollow
   def follow(user)
     active_friendships.create(followed_id: user.id)
-    #create notification for follow
-    notification=Notification.create(recipient:user,actor:Current.user,action:"followed",notifiable:user)
-    NotificationRelayJob.perform_later(notification)
-
-    notify(notification)
-
   end
 
   def unfollow(user)
     active_friendships.find_by(followed_id: user.id).destroy
-    #create notification for unfollow
-    notification=Notification.create(recipient:user,actor:Current.user,action:"unfollowed",notifiable:user)
-    NotificationRelayJob.perform_later(notification)
-
-    notify(notification)
-
   end
 
   def following?(user)
@@ -49,33 +38,22 @@ class User < ApplicationRecord
   end
 
 
-
-
-
   #like unlike tweets
   def liked?(tweet)
     liked_tweets.include?(tweet)
   end
 
+  #use callback for like
   def like(tweet)
-    if liked_tweets.include?(tweet)
-      liked_tweets.destroy(tweet)
-      #create unlike notification
-      notification=Notification.create(recipient:tweet.user,actor:Current.user,action:"unlike",notifiable:tweet)
-      NotificationRelayJob.perform_later(notification)
-    else
-      liked_tweets<<tweet
-      #create like notification
-      notification=Notification.create(recipient:tweet.user,actor:Current.user,action:"like",notifiable:tweet)
-      NotificationRelayJob.perform_later(notification)
-    end
+    liked_tweets<<tweet
+    like_broadcast(tweet)
+  end
 
-    notify(notification)
-    public_target="tweet_#{tweet.id}_public_likes"
-    broadcast_replace_later_to "public_likes",
-                               target:public_target,
-                               partial:"likes/like_count",
-                               locals:{tweet:tweet}
+
+
+  def unlike(tweet)
+    liked_tweets.destroy(tweet)
+    like_broadcast(tweet)
   end
 
 end
