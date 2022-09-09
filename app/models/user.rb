@@ -22,7 +22,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
 
-
+  #refactor follow
   #follow/unfollow
   def follow(user)
     active_friendships.create(followed_id: user.id)
