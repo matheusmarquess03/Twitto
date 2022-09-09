@@ -15,7 +15,7 @@
         <h3 class="follow_unfollow_button">
           <%= @profile.name  %>
           <% if !(@profile.id== current_user.id)%>
-            <%if Current.user.following?(@profile)%>
+            <%if current_user.following?(@profile)%>
               <%= render "unfollow",profile:@profile%>
             <%elsif%>
               <%= render "follow",profile:@profile%>

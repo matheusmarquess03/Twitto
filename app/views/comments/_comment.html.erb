@@ -4,7 +4,7 @@
       <%if !comment.user.profile_image.byte_size.nil?%>
         <%= image_tag comment.user.profile_image,class:"post_image"%>
       <%else%>
-        <%=gravatar_image_tag(comment.user.email, size:64,alt:Current.user.name,class:"post_image")%>
+        <%=gravatar_image_tag(comment.user.email, size:64,alt:current_user.name,class:"post_image")%>
       <%end%>
     </div>
     <div class="post_body">
@@ -24,7 +24,7 @@
         <div class="likeOption">
           <%= render "comments/commentlike",comment:comment %>
         </div>
-        <% if comment.user.id == Current.user.id %>
+        <% if comment.user.id == current_user.id %>
           <div class="deleteOption">
             <%= link_to "", [comment.tweet, comment], data: {
               turbo_method: :delete,
