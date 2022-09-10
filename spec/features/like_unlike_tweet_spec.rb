@@ -18,9 +18,6 @@ RSpec.feature "like/unlike tweets",type: :feature do
     fill_in 'tweet_body',with:"Test tweet"
     click_button 'Tweet'
   end
-  # let!(:tweet){create(:tweet)}
-  # let!(:retweet){create(:retweet_type)}
-  # let!(:reply){create(:reply_type)}
 
   scenario "like tweet" do
     expect(page).to have_content "Test tweet"
@@ -31,14 +28,9 @@ RSpec.feature "like/unlike tweets",type: :feature do
   scenario "unlike tweet" do
     expect(page).to have_content "Test tweet"
 
-    binding.pry
-
     find(:css, '.fa-heart').click
-    binding.pry
+    visit('/')
     expect { find(:css, '.fa-heart').click }.to change{Tweet.last.likes.count}.by(-1)
-
-    binding.pry
-
   end
 
 
