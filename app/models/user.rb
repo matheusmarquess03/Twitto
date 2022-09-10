@@ -1,57 +1,51 @@
-class User < ApplicationRecord
+class Tweet < ApplicationRecord
   include NotificationHelper
-  include LikeBroadcastHelper
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  has_many :tweets, dependent: :destroy
+  include BroadcastTweetHelper
+
+  belongs_to :user
+
+  has_many :likes, dependent: :destroy
+
+  belongs_to :parent_tweet, class_name: 'Tweet', foreign_key: 'parent_tweet_id',optional: true
+  has_many :child_tweets, class_name: 'Tweet', foreign_key: 'parent_tweet_id',dependent: :destroy
+
+  has_many :retweets, -> { where(tweet_type: "retweet") } ,class_name:'Tweet',foreign_key: 'parent_tweet_id',dependent: :destroy
+  has_many :replies, -> { where(tweet_type: "reply") } ,class_name:'Tweet',foreign_key: 'parent_tweet_id',dependent: :destroy
+
+  # Select tweets.* from tweets where tweets.tweet_type="reply" and tweets.parent_tweet_id= 75
+
+  validates :body,presence: true,unless: :parent_tweet_id
+
+  has_one_attached :tweet_image
+
+  scope :followers_tweets,->(currentUser){ where(user_id: currentUser.following.ids << currentUser.id) }
+
+  # scope :my_tweets,->(currentUser){ where(user_id: currentUser)}
+
+  scope :get_replies,->(id){ where(parent_tweet_id: id) }
+
+  scope :recent,->{ order("created_at DESC") }
+
+  after_destroy_commit{ broadcast_remove_to "public_tweets" }
+
+  after_create_commit :send_retweet_reply_notification,if: Proc.new{ tweet_type == "retweet" or tweet_type == "reply" }
+
+  after_create_commit :broadcast_tweet_retweet
 
 
-  has_many :likes,dependent: :destroy
-  #user.liked_tweets shows tweets user has liked
-  has_many :liked_tweets,through: :likes,source: :tweet
 
-  has_many :active_friendships,class_name:"Friendship",foreign_key:"follower_id",dependent: :destroy
-  has_many :following, through: :active_friendships,source: :followed
-  has_many :passive_friendships,class_name:"Friendship",foreign_key:"followed_id",dependent: :destroy
-  has_many :followers, through: :passive_friendships,source: :follower
-
-  has_many :notifications,foreign_key: :recipient_id
-
-  has_one_attached :profile_image
-
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
-
-
-
-  #follow/unfollow
-  def follow(user)
-    active_friendships.create(followed_id: user.id)
+  def send_retweet_reply_notification
+    notification = Notification.create(recipient:  self.parent_tweet.user, actor: self.user, action: self.tweet_type, notifiable: self)
+    NotificationRelayJob.perform_later(notification)
+    notify(notification)
   end
 
-  def unfollow(user)
-    active_friendships.find_by(followed_id: user.id).destroy
-  end
-
-  def following?(user)
-    following.include?(user)
-  end
-
-
-  #like unlike tweets
-  def liked?(tweet)
-    liked_tweets.include?(tweet)
-  end
-
-  def like(tweet)
-    liked_tweets<<tweet
-    like_broadcast(tweet)
-  end
-
-
-  def unlike(tweet)
-    liked_tweets.destroy(tweet)
-    like_broadcast(tweet)
+  def broadcast_tweet_retweet
+    if self.tweet_type == "tweet"
+      broadcastTweet(self)
+    elsif self.tweet_type == "retweet"
+      broadcastRetweet(self)
+    end
   end
 
 end
