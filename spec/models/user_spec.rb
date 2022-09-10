@@ -2,6 +2,10 @@ require "rails_helper"
 
 RSpec.describe User,type: :model do
 
+
+  let(:actor){ create(:user) }
+  let(:recipient){ create(:user) }
+
   describe "validates associations" do
 
     it "with tweets" do
@@ -79,22 +83,40 @@ RSpec.describe User,type: :model do
 
   end
 
-  # describe "check methods in user model" do
 
-  #   it "checks like" do
-  #     actor = create(:user)
-  #     recipient = create(:user)
-  #     tweet = create(:tweet,user: recipient)
+  describe "check methods in user model" do
 
-  #     notification = create(:notification,recipient: recipient, actor: actor, action: "like",notifiable: :for_tweet )
-  #     binding.pry
+    it "checks #like" do
+      tweet = create(:tweet,user: recipient)
+      # notification = create(:notification,:for_tweet ,recipient: recipient, actor: actor, action: "like")
+      expect{ actor.like(tweet)}.to change{Like.count}.by(1)
+    end
 
-  #     user.like(tweet)
-  #     expect{ user.like(tweet)}.to change{Like.count}.by(1)
-  #   end
+    it "checks #unlike" do
+      tweet = create(:tweet,user: recipient)
+      actor.like(tweet)
+      expect{ actor.unlike(tweet)}.to change{Like.count}.by(-1)
+    end
 
-  # end
+    it "check #liked?" do
+      tweet = create(:tweet,user: recipient)
+      actor.like(tweet)
+      expect(actor.liked?(tweet)).to eq(true)
+    end
 
+    it "checks #follow" do
+      expect{ actor.follow(recipient) }.to change{Notification.count}.by(1)
+    end
 
+    it "checks #unfollow" do
+      actor.follow(recipient)
+      expect{ actor.unfollow(recipient) }.to change{Notification.count}.by(-1)
+    end
 
+    it "check #following?" do
+      actor.follow(recipient)
+      expect(actor.following?(recipient)).to eq(true)
+    end
+
+  end
 end
