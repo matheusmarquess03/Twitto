@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   root to: "tweets#index"
   devise_for :users, :controllers =>{registrations:'registrations'}
+  get '/search',  to: 'tweets#search'
 
   resources :tweets, :except =>[:edit] do
     member do

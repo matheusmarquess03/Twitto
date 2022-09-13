@@ -7,16 +7,14 @@
     <%= link_to "Home",root_path,class:"sidebarOption_home",style:"color:black" %>
   </div>
   <div class="sidebarOption">
-    <i class="fa-solid fa-user"></i>
-    <%= link_to "Profile", profile_path(current_user.id),class:"sidebarOption_profile",style:"color:black" %>
+    <i class="fa-solid fa-search"></i>
+    <%= link_to "Search",search_path,class:"sidebarOption_home",style:"color:black" %>
   </div>
   <div class="sidebarOption">
-    <%= turbo_frame_tag "#{current_user.id}_notification_bell_icon" do %>
       <div id="user_notification_bell">
         <i class="fa-solid fa-bell" style="color:black" id="notified_bell"></i>
         <%= link_to "Notification", notifications_path,class:"sidebarOption_notification",id:"mark_notification_as_read",style:"color:black",data:{"turbo-frame": "_top"} %>
       </div>
-    <% end %>
   </div>
   <div class="sidebarOption">
     <i class="fa-solid fa-right-from-bracket"></i>

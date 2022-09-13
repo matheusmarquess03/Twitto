@@ -26,6 +26,8 @@ class Tweet < ApplicationRecord
 
   scope :recent,->{ order("created_at DESC") }
 
+  scope :get_user,->(body) { where("body LIKE ? ","%#{body}%") }
+
   after_destroy_commit{ broadcast_remove_to "public_tweets" }
 
   after_create_commit :send_retweet_reply_notification,if: Proc.new{ tweet_type == "retweet" or tweet_type == "reply" }
@@ -45,6 +47,14 @@ class Tweet < ApplicationRecord
       broadcastTweet(self)
     elsif self.tweet_type == "retweet"
       broadcastRetweet(self)
+    end
+  end
+
+  def self.consultaUsuarioNome(body)
+    if body.present?
+      where("body LIKE ? ","%#{body}%")
+    else
+      all
     end
   end
 

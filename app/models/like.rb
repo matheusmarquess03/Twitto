@@ -11,7 +11,7 @@ class Like < ApplicationRecord
   def send_like_notification
     notification=Notification.create(recipient: self.tweet.user,actor: self.user,action: "like",notifiable: self.tweet)
     NotificationRelayJob.perform_later(notification)
-    notify(notification)
+    # notify(notification)
   end
 
   def delete_like_notification

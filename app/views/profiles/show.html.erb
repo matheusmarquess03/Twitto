@@ -1,5 +1,5 @@
 <div class="profile">
-  <%= render "shared/sidebar",current_user:current_user %>
+  <%= render "shared/sidebar",current_user:Current.user %>
   <div class="profile_body">
     <div class="profile_header">
 
@@ -34,7 +34,7 @@
     <div class="profile_body">
       <%= turbo_frame_tag "tweets" do %>
         <% @user_tweets.each do |tweet| %>
-          <%= render "tweets/#{tweet.tweet_type.parameterize}", tweet:tweet %>
+          <%= render "tweets/#{tweet.tweet_type&.parameterize}", tweet:tweet %>
         <% end %>
       <%end%>
     </div>
