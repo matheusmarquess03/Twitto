@@ -1,5 +1,4 @@
 <% like_status||= local_assigns[:like_status] %>
-<%= turbo_stream_from "public_tweets" %>
 <%= turbo_frame_tag "tweet_#{tweet.id}" do%>
   <div class="post">
     <div class="post_avatar">

@@ -20,7 +20,6 @@ class TweetsController<ApplicationController
 
     respond_to do |format|
       if @tweet.save
-        format.turbo_stream
         format.html{redirect_back fallback_location: @tweet}
       else
         flash[:error]="Wrong inputs!! Something is missing"
@@ -51,7 +50,6 @@ class TweetsController<ApplicationController
 
     respond_to do |format|
       if @retweet.save
-        format.turbo_stream
         format.html{redirect_back fallback_location: @tweet,notice: "retweet created"}
       else
         format.html{redirect_back fallback_location: @tweet,alert: "Something went wrong while retweeting"}
@@ -71,7 +69,6 @@ class TweetsController<ApplicationController
 
     respond_to do |format|
       if @reply.save
-        format.turbo_stream
         format.html{redirect_back fallback_location: @tweet,notice: "reply created"}
       else
         flash[:error]="Wrong inputs!! Something is missing"

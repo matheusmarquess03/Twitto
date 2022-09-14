@@ -1,7 +1,6 @@
 
 <div class="notifications">
   <%= render "shared/sidebar",current_user: current_user%>
-  <%= turbo_stream_from "notification_page" %>
   <div class="notification_message">
     <% if @notifications.count>0 %>
       <div  id="notification_page_<%=current_user.id%>">

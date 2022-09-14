@@ -7,18 +7,18 @@ RSpec.describe "Creating articles" do
   context "Creating tweet" do
 
     it "has type tweet" do
-      expect{post '/tweets', params: { tweet: { body: "Test"} }, as: :turbo_stream }.to change{Tweet.count}.by(1)
+      expect{post '/tweets', params: { tweet: { body: "Test"} } }.to change{Tweet.count}.by(1)
       expect(Tweet.last.tweet_type).to eq("tweet")
     end
 
     it "has type retweet" do
-      expect{  post "/tweets/#{tweet.id}/retweet",params: { body: nil, parent_tweet_id: tweet.id}, as: :turbo_stream }.to change{Tweet.count}.by(1)
+      expect{  post "/tweets/#{tweet.id}/retweet",params: { body: nil, parent_tweet_id: tweet.id} }.to change{Tweet.count}.by(1)
       expect(Tweet.last.tweet_type).to eq("retweet")
     end
 
 
     it "has type reply" do
-      expect{ post "/tweets/#{tweet.id}/reply",params: { body: "Its a reply", parent_tweet_id: tweet.id}, as: :turbo_stream }.to change{Tweet.count}.by(1)
+      expect{ post "/tweets/#{tweet.id}/reply",params: { body: "Its a reply", parent_tweet_id: tweet.id} }.to change{Tweet.count}.by(1)
       expect(Tweet.last.tweet_type).to eq("reply")
     end
 
@@ -32,24 +32,24 @@ RSpec.describe "Creating articles" do
     # end
 
     it "retweet gets deleted" do
-      post "/tweets/#{tweet.id}/retweet",params: { body: nil, parent_tweet_id: tweet.id}, as: :turbo_stream
-      expect{delete "/tweets/#{Tweet.last.id}", as: :turbo_stream}.to change{Tweet.count}.by(-1)
+      post "/tweets/#{tweet.id}/retweet",params: { body: nil, parent_tweet_id: tweet.id}
+      expect{delete "/tweets/#{Tweet.last.id}"}.to change{Tweet.count}.by(-1)
     end
 
 
     it "reply gets deleted" do
-      post "/tweets/#{tweet.id}/reply",params: { body: "Its a reply", parent_tweet_id: tweet.id}, as: :turbo_stream
-      expect{delete "/tweets/#{Tweet.last.id}", as: :turbo_stream}.to change{Tweet.count}.by(-1)
+      post "/tweets/#{tweet.id}/reply",params: { body: "Its a reply", parent_tweet_id: tweet.id}
+      expect{delete "/tweets/#{Tweet.last.id}"}.to change{Tweet.count}.by(-1)
     end
 
     it "deletes retweets on deleteing parent tweet" do
-      post "/tweets/#{tweet.id}/retweet",params: { body: nil, parent_tweet_id: tweet.id}, as: :turbo_stream
-      expect{delete "/tweets/#{Tweet.first.id}", as: :turbo_stream}.to change{Tweet.count}.by(-2)
+      post "/tweets/#{tweet.id}/retweet",params: { body: nil, parent_tweet_id: tweet.id}
+      expect{delete "/tweets/#{Tweet.first.id}"}.to change{Tweet.count}.by(-2)
     end
 
     it "deletes replies on deleteing parent tweet" do
-      post "/tweets/#{tweet.id}/reply",params: { body: "Its a reply", parent_tweet_id: tweet.id}, as: :turbo_stream
-      expect{delete "/tweets/#{Tweet.first.id}", as: :turbo_stream}.to change{Tweet.count}.by(-2)
+      post "/tweets/#{tweet.id}/reply",params: { body: "Its a reply", parent_tweet_id: tweet.id}
+      expect{delete "/tweets/#{Tweet.first.id}"}.to change{Tweet.count}.by(-2)
     end
 
   end
