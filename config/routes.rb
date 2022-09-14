@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       post :retweet
       get :likeables
       post :reply
+      post :like
     end
   end
 
@@ -24,7 +25,7 @@ Rails.application.routes.draw do
     end
   end
 
-  post 'like/:id',to: "tweets#like",as: "like_tweet"
+  # post 'like/:id',to: "tweets#like",as: "like_tweet"
 
 
   # scope module: 'admin' do
