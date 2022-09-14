@@ -10,7 +10,7 @@ The application to be developed is a microblog, as well as twitter.
 
 ### Link
 
-[Access Here](https://https://tweeto-challenge.herokuapp.com/)
+[Access Here](https://tweeto-challenge.herokuapp.com/)
 
 ## Running the project
 
